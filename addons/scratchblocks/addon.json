@@ -28,6 +28,45 @@
       "matches": ["https://scratch.mit.edu/discuss/post/*/edit/"]
     }
   ],
+<<<<<<< HEAD
+=======
+  "settings": [
+    {
+      "name": "Block color",
+      "id": "color",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Block shape",
+      "id": "shape",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Text formatting",
+      "id": "text",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Block style",
+      "id": "version",
+      "type": "select",
+      "potentialValues": [
+        {
+          "id": "2.0",
+          "name": "2.0"
+        },
+        {
+          "id": "3.0",
+          "name": "3.0"
+        }
+      ],
+      "default": "3.0"
+    }
+  ],
+>>>>>>> f698a562 (Add selection for 2.0 / 3.0 blocks)
   "tags": ["community", "forums", "beta"],
   "libraries": ["scratchblocks"],
   "info": [
