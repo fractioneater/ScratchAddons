@@ -22,7 +22,7 @@
   "userscripts": [
     {
       "url": "userscript.js",
-      "matches": ["editingScreens"],
+      "matches": ["https://scratch.mit.edu/discuss/*"],
       "runAtComplete": false
     }
   ],
