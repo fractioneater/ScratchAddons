@@ -50,22 +50,6 @@
       "id": "text",
       "type": "boolean",
       "default": true
-    },
-    {
-      "name": "Block style",
-      "id": "version",
-      "type": "select",
-      "potentialValues": [
-        {
-          "id": "2.0",
-          "name": "2.0"
-        },
-        {
-          "id": "3.0",
-          "name": "3.0"
-        }
-      ],
-      "default": "3.0"
     }
   ],
   "tags": ["community", "forums", "beta"],
