@@ -1,6 +1,6 @@
 export default async function ({ addon, console, msg }) {
   const action = addon.settings.get("action");
-  let playerToggled = false;
+  let playerToggled = addon.settings.get("tw-default");
   let scratchStage;
   let twIframeContainer = document.createElement("div");
   twIframeContainer.className = "sa-tw-iframe-container";
@@ -18,12 +18,43 @@ export default async function ({ addon, console, msg }) {
   button.className = "button sa-tw-button";
   button.title = "TurboWarp";
 
+  if (playerToggled) {
+    setupIframe();
+  }
+
   function removeIframe() {
     twIframeContainer.remove();
     scratchStage.style.display = "";
     button.classList.remove("scratch");
     playerToggled = false;
     button.title = "TurboWarp";
+  }
+
+  async function setupIframe() {
+    const username = await addon.auth.fetchUsername();
+    const usp = new URLSearchParams();
+    usp.set("settings-button", "1");
+    if (username) usp.set("username", username);
+    if (addon.settings.get("addons")) {
+      const enabledAddons = await addon.self.getEnabledAddons("editor");
+      usp.set("addons", enabledAddons.join(","));
+    }
+    // Apply the same fullscreen background color, consistently with the vanilla Scratch fullscreen behavior.
+    // It's not expected here to support dynamicDisable/dyanmicEnable of editor-dark-mode to work exactly
+    // like it does with vanilla.
+    const fullscreenBackground =
+      document.documentElement.style.getPropertyValue("--editorDarkMode-fullscreen") || "white";
+    usp.set("fullscreen-background", fullscreenBackground);
+    const iframeUrl = `https://turbowarp.org/${projectId}/embed?${usp}${search}`;
+    twIframe.src = "";
+    scratchStage.parentElement.prepend(twIframeContainer);
+    // Use location.replace to avoid creating a history entry
+    twIframe.contentWindow.location.replace(iframeUrl);
+
+    scratchStage.style.display = "none";
+    button.classList.add("scratch");
+    button.title = "Scratch";
+    addon.tab.traps.vm.stopAll();
   }
 
   button.onclick = async () => {
@@ -44,30 +75,7 @@ export default async function ({ addon, console, msg }) {
     if (action === "player") {
       playerToggled = !playerToggled;
       if (playerToggled) {
-        const username = await addon.auth.fetchUsername();
-        const usp = new URLSearchParams();
-        usp.set("settings-button", "1");
-        if (username) usp.set("username", username);
-        if (addon.settings.get("addons")) {
-          const enabledAddons = await addon.self.getEnabledAddons("editor");
-          usp.set("addons", enabledAddons.join(","));
-        }
-        // Apply the same fullscreen background color, consistently with the vanilla Scratch fullscreen behavior.
-        // It's not expected here to support dynamicDisable/dyanmicEnable of editor-dark-mode to work exactly
-        // like it does with vanilla.
-        const fullscreenBackground =
-          document.documentElement.style.getPropertyValue("--editorDarkMode-fullscreen") || "white";
-        usp.set("fullscreen-background", fullscreenBackground);
-        const iframeUrl = `https://turbowarp.org/${projectId}/embed?${usp}${search}`;
-        twIframe.src = "";
-        scratchStage.parentElement.prepend(twIframeContainer);
-        // Use location.replace to avoid creating a history entry
-        twIframe.contentWindow.location.replace(iframeUrl);
-
-        scratchStage.style.display = "none";
-        button.classList.add("scratch");
-        button.title = "Scratch";
-        addon.tab.traps.vm.stopAll();
+        setupIframe();
       } else removeIframe();
     } else {
       window.open(

@@ -56,6 +56,15 @@
       "if": {
         "settings": { "action": "player" }
       }
+    },
+    {
+      "name": "Automatically enable turbowarp player",
+      "id": "tw-default",
+      "type": "boolean",
+      "default": false,
+      "if": {
+        "settings": { "action": "player" }
+      }
     }
   ],
   "versionAdded": "1.18.0",
